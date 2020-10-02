@@ -6,7 +6,7 @@ import sys
 
 
 app = Flask(__name__)
-TOKEN = '00b81388e61d46438ef4aecde6995a95'#'<insert your token here' #'00b81388e61d46438ef4aecde6995a95'
+TOKEN = '<insert your token here>'
 shiritori = AppDriver(diffbot_token=TOKEN)
 vis = VisualizationService()
 
