@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script type="text/javascript"
+             src="{{ url_for('static', filename='vis-network/standalone/umd/vis-network.js') }}"
+    ></script>
+<script type="text/javascript">
+    var nodes = new vis.DataSet( {{ data.nodes|tojson }});
+    var edges = new vis.DataSet();
+
+</script>
+
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='ex_graph_t2.js') }}"></script>
+
+  <script>
+   $(document).ready(function() {
+      $("#shiritori_reset").click(function(event){
+         var text_input = document.getElementById("shiritori_input").value;
+         document.getElementById("status").textContent = "Processing...";
+         $.ajax({
+            url: "/shiritori_reset",
+            type: "get",
+            data: {text: text_input},
+           success: function(response) {
+
+                var data = JSON.parse(response);
+                var newEntityDiv = document.createElement("div");
+                newEntityDiv.textContent = data.firstName;
+                nodes.clear();
+                   edges.clear();
+                nodes.add(data.newNode);
+
+                var track_div = document.getElementById("shiritori_track");
+                var cNode = track_div.cloneNode(false);
+                track_div.parentNode.replaceChild(cNode, track_div);
+                var track_div = document.getElementById("shiritori_track");
+                track_div.appendChild(newEntityDiv);
+
+                document.getElementById("status").textContent = "New game started";
+
+                var opt = {
+                    offset: {
+                        x: -70,
+                        y: -100
+                    },
+                    animation: {
+                        duration: 1000,
+                        easingFunction: 'easeInOutQuad'
+                    }
+                };
+                network.focus(data.firstName, opt);
+            },
+          error: function(xhr) {
+        //Do Something to handle error
+        }
+       });
+     });
+      $("#send_shiritori_step").click(function(event){
+         var text_input = document.getElementById("shiritori_input").value;
+         document.getElementById("status").textContent = "Processing...";
+         $.ajax({
+            url: "/shiritori_parse",
+            type: "get",
+            data: {text: text_input},
+           success: function(response) {
+                var data = JSON.parse(response);
+
+                document.getElementById("status").textContent = data.statusString;
+                if (data.successCode == 0) {
+                    var newEntityDiv = document.createElement("div");
+                    newEntityDiv.textContent = data.entityContent;
+                    var successfulLinkDiv = document.createElement("div");
+                    successfulLinkDiv.textContent = data.relationContentReadable;
+
+                    var track_div = document.getElementById("shiritori_track");
+                    track_div.prepend(successfulLinkDiv);
+                    track_div.prepend(newEntityDiv);
+
+
+                    if (data.previousEntity != "") {
+                        nodes.add({
+                            id: data.entityContent,
+                            label: data.entityContent,
+                            image: data.entityImage,
+                            x: network.getPosition(data.previousEntity).x,
+                            y: network.getPosition(data.previousEntity).y - 200
+                        });
+
+                        edges.add({
+                            from: data.previousEntity,
+                            to: data.relationContent,
+                            label: data.relationType,
+
+                        });
+
+                        if (data.relationContent != "") {
+                            nodes.add({
+                                id: data.relationContent,
+                                label: data.relationContent,
+                                image: "",
+                                size: 25,
+                            x: network.getPosition(data.previousEntity).x + 220,
+                            y: network.getPosition(data.previousEntity).y - 100
+                            });
+                        }
+                        if (data.relationContent != "") {
+                            edges.add({
+                                from: data.entityContent,
+                                to: data.relationContent,
+                                label: data.relationType
+                            });
+                        }
+                    } else {
+                        nodes.add({
+                            id: data.entityContent,
+                            label: data.entityContent,
+                            image: data.entityImage
+                        });
+                    }
+                    var opt = {
+                        offset: {
+                            x: -70,
+                            y: -100
+                        },
+                        animation: {
+                            duration: 1000,
+                            easingFunction: 'easeInOutQuad'
+                        }
+                    };
+                    network.focus(data.entityContent, opt);
+                }
+            },
+          error: function(xhr) {
+        //Do Something to handle error
+        }
+       });
+     });
+   });
+  </script>
+<title>KG Shiritori</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body,h1 {font-family: "Raleway", Arial, sans-serif}
+h1 {letter-spacing: 6px}
+.w3-row-padding img {margin-bottom: 12px}
+</style>
+<body>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-content" style="max-width:1500px">
+
+<!-- Header -->
+<header class="w3-panel w3-center w3-opacity" style="padding:16px">
+  <h1>KG Shiritori</h1>
+
+  <div class="w3-padding-16">
+    <h5 class="w3-bar">This is a demonstrating of playing KG Shiritori using Diffbot's Knowledge Graph and NLP Tools.</h5>
+  </div>
+</header>
+
+<!-- Photo Grid -->
+<div class="w3-row-padding w3-grayscale" style="margin-bottom:128px">
+  <div class="w3-half">
+    <div id="mynetwork"></div>
+  </div>
+
+  <div class="w3-half w3-light-grey">
+      <div class="w3-section">
+        <input class="w3-input w3-round" id="shiritori_input" type="text" placeholder="Input your text here and press Submit to get started!"></input>
+      </div>
+      <div class="w3-section">
+        <button class="w3-btn w3-indigo w3-round" id="send_shiritori_step">Submit</button>
+              <button class="flrt w3-btn w3-indigo w3-round" id="shiritori_reset">Start a new game from input text</button>
+      </div>
+      <div class="w3-section" id="status">New game started</div>
+
+        <div id='shiritori_track'>
+            <div>
+                {{ data.firstName }}
+            </div>
+        </div>
+      <div class="w3-section">
+  </div>
+</div>
+
+<!-- End Page Content -->
+</div>
+
+</body>
+</html>

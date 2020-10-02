@@ -1,0 +1,12 @@
+{
+  "name": "asdf",
+  "version": "1.0.0",
+  "description": "",
+  "main": "ex_graph.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {}
+}
