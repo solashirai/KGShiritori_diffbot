@@ -3,9 +3,8 @@
 <link rel="stylesheet" href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css">
 
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <script type="text/javascript"
-             src="{{ url_for('static', filename='vis-network/standalone/umd/vis-network.js') }}"
-    ></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis-network.min.js" integrity="sha512-GE9mKnPrTn2DY5AZuIC9yE6K4FF8T+9lsO7jwHn+RW9rEjnHzF/in0oGwlPzRwjhQ+oJiawmtfvleX+l6h5/cA==" crossorigin="anonymous"></script>
 <script type="text/javascript">
     var nodes = new vis.DataSet( {{ data.nodes|tojson }});
     var edges = new vis.DataSet();
@@ -85,8 +84,8 @@
                             id: data.entityContent,
                             label: data.entityContent,
                             image: data.entityImage,
-                            x: network.getPosition(data.previousEntity).x,
-                            y: network.getPosition(data.previousEntity).y - 200
+                            x: network.getPositions(data.previousEntity)[data.previousEntity].x,
+                            y: network.getPositions(data.previousEntity)[data.previousEntity].y - 200
                         });
 
                         edges.add({
@@ -102,8 +101,8 @@
                                 label: data.relationContent,
                                 image: "",
                                 size: 25,
-                            x: network.getPosition(data.previousEntity).x + 220,
-                            y: network.getPosition(data.previousEntity).y - 100
+                            x: network.getPositions(data.previousEntity)[data.previousEntity].x + 220,
+                            y: network.getPositions(data.previousEntity)[data.previousEntity].y - 100
                             });
                         }
                         if (data.relationContent != "") {

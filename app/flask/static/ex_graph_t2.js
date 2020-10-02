@@ -22,15 +22,15 @@ function draw() {
         min: 5,
         max: 150,
       },
-      physics:{
-        enabled: false
-        // repulsion: {
-        //   nodeDistance: 200
-        // }
-      },
+      // physics: {
+      //   enabled: false
+      // },
       font: {
         size: 16
       }
+    },
+    physics: {
+      enabled: false
     },
       edges: {
         arrows: {
