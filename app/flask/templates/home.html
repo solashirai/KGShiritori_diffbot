@@ -169,6 +169,10 @@ h1 {letter-spacing: 6px}
 
   <div class="w3-padding-16">
     <h5 class="w3-bar">This is a demonstrating of playing KG Shiritori using Diffbot's Knowledge Graph and NLP Tools.</h5>
+      <div>
+          <button onclick="document.getElementById('aboutModal').style.display='block'" class="w3-btn">About</button>
+          </div>
+
   </div>
 </header>
 
@@ -194,6 +198,20 @@ h1 {letter-spacing: 6px}
             </div>
         </div>
       <div class="w3-section">
+  </div>
+</div>
+    <div id="aboutModal" class="w3-modal">
+  <div class="w3-modal-content">
+    <div class="w3-container">
+      <span onclick="document.getElementById('aboutModal').style.display='none'"
+      class="w3-button w3-display-topright">&times;</span>
+      <p>This is a take on a Japanese word-game, shiritori.</p>
+        <p>The goal of the game is to make connections between people using facts that are present in Diffbot's knowledge graph.</p>
+        <p>Enter text containing an entity and some fact about them to pass to Diffbot's natural language API.</p>
+        <p>For example, if you start with the node "Barack Obama", you could enter the sentence "George W. Bush worked as the president." to connect the two entities.</p>
+        <p>The only rule is that you can't re-use nodes, so you can't re-use the people "Barack Obama", "George W. Bush", or the employment title "president".</p>
+        <p>Have fun, and see how many connections you can make!</p>
+    </div>
   </div>
 </div>
 
