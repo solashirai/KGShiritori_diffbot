@@ -57,8 +57,13 @@
         }
        });
      });
-      $("#send_shiritori_step").click(function(event){
-         var text_input = document.getElementById("shiritori_input").value;
+      $("#shiritori_input").keyup(function(ev) {
+          if (ev.which === 13) {
+              send_parse_shiritori();
+              }
+          });
+      function send_parse_shiritori() {
+          var text_input = document.getElementById("shiritori_input").value;
          document.getElementById("status").textContent = "Processing...";
          $.ajax({
             url: "/shiritori_parse",
@@ -136,6 +141,9 @@
         //Do Something to handle error
         }
        });
+      }
+      $("#send_shiritori_step").click(function(event){
+         send_parse_shiritori();
      });
    });
   </script>
