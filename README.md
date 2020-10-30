@@ -1,3 +1,5 @@
+This is the source code used for my submission to [DBpedia Autumn Hackathon 2020](https://wiki.dbpedia.org/events/dbpedia-autumn-hackathon-2020). It will only work if you have an access token to Diffbot's API. It also is far from neat of maintainable, so take anything in this repo with a grain of salt...
+
 ## KG Shiritori App
 
 ![Shiritori_image](app_image.png)
